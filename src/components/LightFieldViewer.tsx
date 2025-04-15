@@ -69,14 +69,15 @@ const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
     };
   }, []);
 
+  // ex: https://cdn.jsdelivr.net/gh/norawennerstrom/lf-Bikes/Clean/view_85.webp
   const lightFieldPath =
-    "/app/" +
+    "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
     selectedImage +
     "/" +
     selectedDenoiser +
     "/view_" +
     view +
-    ".png";
+    ".webp";
 
   return (
     <div className="light-field-viewer">

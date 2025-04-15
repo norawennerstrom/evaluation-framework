@@ -13,64 +13,50 @@ app.use(cors());
 // Serve the built frontend
 app.use(express.static(path.resolve(__dirname, "dist")));
 
-// API: list available light fields (top-level folders in public/)
+// API: list available light fields
 app.get("/api/lightFields", (req, res) => {
-  const publicDir = path.join(__dirname, "public");
+  const jsonPath = path.join(__dirname, "lf.json");
 
-  fs.readdir(publicDir, { withFileTypes: true }, (err, files) => {
+  fs.readFile(jsonPath, "utf8", (err, data) => {
     if (err) {
-      return res.status(500).json({ error: "Could not read light fields" });
+      console.error("Error reading lf.json: ", err);
+      return res.status(500).json({ error: "Could not read lf.json" });
     }
 
-    const lightFields = files
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name);
-
-    res.json(lightFields);
+    try {
+      const parsed = JSON.parse(data);
+      const lightFields = parsed.base_sets || [];
+      res.json(lightFields);
+    } catch (parseErr) {
+      console.error("Error parsing lf.json: ", parseErr);
+      res.status(500).json({ error: "Invalid JSON format in lf.json" });
+    }
   });
 });
 
-// API: list denoiser folders inside Bikes
+// get the denoisers from lf.json
 app.get("/api/denoisers", (req, res) => {
-  // doesn't work with App.tsx, fix later
-  //const lightField = req.params.lightField;
-  //const lightFieldPath = path.join(__dirname, "public", lightField);
+  const jsonPath = path.join(__dirname, "lf.json");
 
-  const denoisersPath = path.join(__dirname, "public/Bikes");
-
-  fs.readdir(denoisersPath, { withFileTypes: true }, (err, files) => {
+  fs.readFile(jsonPath, "utf8", (err, data) => {
     if (err) {
-      return res.status(500).json({ error: "Could not read denoisers" });
+      console.error("Error reading lf.json: ", err);
+      return res.status(500).json({ error: "Could not read lf.json" });
     }
 
-    const denoisers = files
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name);
-
-    res.json(denoisers);
+    try {
+      const parsed = JSON.parse(data);
+      const denoisers = parsed.denoisers || [];
+      res.json(denoisers);
+    } catch (parseErr) {
+      console.error("Error parsing lf.json: ", parseErr);
+      res.status(500).json({ error: "Invalid JSON format in lf.json" });
+    }
   });
 });
 
 // Fallback route for SPA (must come last)
-console.log("__dirname:", __dirname);
-console.log("Resolved index.html:", path.resolve(__dirname, "dist", "index.html"));
 
-// try {
-//   app.get("*", (req, res) => {
-//     try {
-//       const indexPath = path.resolve(__dirname, "dist", "index.html");
-//       res.sendFile(indexPath);
-//     } catch (err) {
-//       console.error("Error sending index.html:", err);
-//       res.status(500).send("Could not send index.html");
-//     }
-//   });
-// } catch (err) {
-//   console.error("Error in app.get:", err);
-// }
-// app.get("/test", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "dist", "index.html"));
-// });
 // Only serve index.html for paths that don't start with /api
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, "dist", "index.html"));

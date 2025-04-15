@@ -3,14 +3,17 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Body from "./components/Body";
 
-// https://cdn.jsdelivr.net/gh/norawennerstrom/lf-Bikes-Clean/view_85.png ?
-
 function fetchFromAPI(endpoint: string, setStateVar: Function) {
   const baseURL = window.location.hostname === "localhost"
   ? "http://localhost:5000"
-  : "https://349e-194-68-59-3.ngrok-free.app"; // empty string if served from same domain
+  : import.meta.env.VITE_API_BASE_URL; // empty string if served from same domain
   useEffect(() => {
-    fetch(`${baseURL}/api/${endpoint}`)
+    fetch(`${baseURL}/api/${endpoint}`, {
+      method: "get",
+      headers: new Headers({
+        "ngrok-skip-browser-warning": "1"
+      })
+    })
       .then((response) => response.json())
       .then((data) => setStateVar(data))
       .catch((error) => console.error("Error fetching:", error));

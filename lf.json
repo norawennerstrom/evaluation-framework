@@ -1,0 +1,16 @@
+{
+    "base_sets": [
+        "Bikes",
+        "Danger_de_Mort",
+        "Fountain_&_Vincent_2",
+        "Stone_Pillars_Outside"
+    ],
+    "denoisers": [
+        "BSRGAN",
+        "Clean",
+        "Noisy",
+        "Restormer",
+        "SwinIR",
+        "SwinIR_large"
+    ]
+}
