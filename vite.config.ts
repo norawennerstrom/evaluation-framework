@@ -6,6 +6,6 @@ export default defineConfig({
   base: "/~nowe2200/kandidatarbete/dist/",
   plugins: [react()],
   server: {
-    allowedHosts: ['3edf-194-68-59-3.ngrok-free.app']
+    //allowedHosts: []
   }
 })

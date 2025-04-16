@@ -16,12 +16,6 @@ const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
   denoisers,
   setSelectedDenoiser,
 }) => {
-  if (!selectedImage) {
-    selectedImage = "Bikes";
-  }
-  if (!selectedDenoiser) {
-    selectedDenoiser = "Clean";
-  }
 
   const [view, setView] = useState(85);
 
