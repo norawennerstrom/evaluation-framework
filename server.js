@@ -9,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+app.use(express.json());
 
 // Serve the built frontend
 app.use(express.static(path.resolve(__dirname, "dist")));
@@ -55,8 +56,28 @@ app.get("/api/denoisers", (req, res) => {
   });
 });
 
-// Fallback route for SPA (must come last)
+app.post("/api/log-performance", (req, res) => {
+  const logDir = path.join(__dirname, "logs");
+  const logFile = path.join(logDir, "performance_log.csv");
 
+  if(!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir);
+  }
+
+  const { type, denoiser, duration, timestamp } = req.body;
+
+  const line = `${timestamp},${type},${denoiser},${duration.toFixed(2)}\n`;
+
+  fs.appendFile(logFile, line, (err) => {
+    if (err) {
+      console.error("Failed to write performance log:", err);
+      return res.status(500).json({ error: "Log write failed" });
+    }
+    res.status(500).json({ status: "ok" });
+  });
+});
+
+// Fallback route for SPA (must come last)
 // Only serve index.html for paths that don't start with /api
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, "dist", "index.html"));

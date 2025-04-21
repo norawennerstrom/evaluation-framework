@@ -23,8 +23,6 @@ const Header: React.FC<HeaderProps> = ({ lightFields, setSelectedImage, setIsDua
         <p>
           Interact using the arrow keys.
           <br />
-          Click an image to toggle focus.
-          <br />
           Double-click to reset the view.
         </p>
       </div>

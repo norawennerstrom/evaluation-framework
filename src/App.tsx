@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Body from "./components/Body";
+import logPerformance from "./components/logPerformance";
 
 function fetchFromAPI(endpoint: string, setStateVar: Function) {
   const baseURL = window.location.hostname === "localhost"
@@ -24,17 +25,34 @@ const cache = new Map<String, HTMLElement>();
 const secondCache = new Map<String, HTMLElement>();
 
 // disk cache vs memory cache!
-function preloadViews(image: string, denoiser: string, viewCache: Map<String, HTMLElement>) {
+function preloadViews(image: string, denoiser: string, viewCache: Map<String, HTMLElement>, onComplete?: (duration: number) => void) {
+  const start = performance.now();
   const src =
     "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
     image +
     "/" +
     denoiser +
     "/view_";
-    console.log("caching " + image + ": " + denoiser);
-  for(let view = 1; view < 13*13; view++) {
+
+    let totalToLoad = 13*13; // lägg in sidlängden som en environment-variabel?
+    let loadCount = 0;
+
+  for(let view = 1; view <= 13*13; view++) {
     const imgSrc = src + view + ".webp";
     const img = new Image();
+
+    img.onload = () => {
+      loadCount++;
+      console.log("loaded " + loadCount + " of " + totalToLoad);
+      if(loadCount === totalToLoad) {
+        const duration = performance.now() - start;
+        logPerformance("init", denoiser, duration);
+
+        if(onComplete) {
+          onComplete(duration);
+        }
+      }
+    }
     img.src = imgSrc;
     viewCache.set(imgSrc, img);
   }
@@ -55,7 +73,6 @@ function App() {
   const [isDualView, setIsDualView] = useState<boolean>(false);
 
   // typ samma sak två gånger?
-  // går in i else för båda varje gång (flytta den här koden någon annanstans?)
   useEffect(() => {
     cache.clear();
     if (selectedImage && selectedDenoiser) {

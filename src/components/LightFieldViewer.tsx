@@ -1,4 +1,5 @@
 import DenoiserMenu from "./DenoiserMenu";
+import logPerformance from "./logPerformance";
 import { useState, useEffect } from "react";
 
 interface LightFieldViewerProps {
@@ -21,35 +22,52 @@ const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+
+      const start = performance.now(); // measure response time
+      const updateView = () => {
+        const img = document.querySelector("img.light-field") as HTMLImageElement;
+        if(img?.complete) {
+          const duration = performance.now() - start;
+          logPerformance("nav", selectedDenoiser, duration);
+        } else {
+          img?.addEventListener("load", () => {
+            const duration = performance.now() - start;
+            logPerformance("nav", selectedDenoiser, duration);
+          }, { once: true });
+        }
+      };
+
       switch (event.key) {
         case "ArrowLeft":
           setView((prev) => {
-            if (prev % gridSide != 0) {
-              return Math.max(prev + 1, 1);
-            }
-            return prev;
+            const newView = prev % gridSide !== 0 ? prev + 1 : prev;
+            setTimeout(updateView, 0);
+            return newView;
           });
           break;
 
         case "ArrowRight":
           setView((prev) => {
-            if (prev % gridSide != 1) {
-              return Math.min(prev - 1, gridSide * gridSide);
-            }
-            return prev;
+            const newView = prev % gridSide !== 1 ? prev - 1 : prev;
+            setTimeout(updateView, 0);
+            return newView;
           });
           break;
 
         case "ArrowUp":
-          if (view > gridSide) {
-            setView((prev) => Math.max(prev - gridSide, 1));
-          }
+          setView((prev) => {
+            const newView = prev - gridSide > 0 ? prev - gridSide : prev;
+            setTimeout(updateView, 0);
+            return newView;
+          });
           break;
 
         case "ArrowDown":
-          if (view < gridSide * (gridSide - 1)) {
-            setView((prev) => Math.min(prev + gridSide, gridSide * gridSide));
-          }
+          setView((prev) => {
+            const newView = prev + gridSide <= gridSide*gridSide ? prev + gridSide : prev;
+            setTimeout(updateView, 0);
+            return newView;
+          });
           break;
 
         default:
@@ -61,7 +79,7 @@ const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [selectedDenoiser]);
 
   // ex: https://cdn.jsdelivr.net/gh/norawennerstrom/lf-Bikes/Clean/view_85.webp
   const lightFieldPath =
