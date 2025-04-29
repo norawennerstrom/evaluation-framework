@@ -3,7 +3,7 @@ import logPerformance from "./logPerformance";
 import { useState, useEffect } from "react";
 
 interface LightFieldViewerProps {
-  selectedImage: string;
+  selectedLightField: string;
   selectedDenoiser: string;
   denoisers: string[];
   setSelectedDenoiser: (denoiser: string) => void;
@@ -12,28 +12,32 @@ interface LightFieldViewerProps {
 const gridSide = 13;
 
 const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
-  selectedImage,
+  selectedLightField,
   selectedDenoiser,
   denoisers,
   setSelectedDenoiser,
 }) => {
-
   const [view, setView] = useState(85);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-
       const start = performance.now(); // measure response time
       const updateView = () => {
-        const img = document.querySelector("img.light-field") as HTMLImageElement;
-        if(img?.complete) {
+        const img = document.querySelector(
+          "img.light-field"
+        ) as HTMLImageElement;
+        if (img?.complete) {
           const duration = performance.now() - start;
           logPerformance("nav", selectedDenoiser, duration);
         } else {
-          img?.addEventListener("load", () => {
-            const duration = performance.now() - start;
-            logPerformance("nav", selectedDenoiser, duration);
-          }, { once: true });
+          img?.addEventListener(
+            "load",
+            () => {
+              const duration = performance.now() - start;
+              logPerformance("nav", selectedDenoiser, duration);
+            },
+            { once: true }
+          );
         }
       };
 
@@ -64,7 +68,8 @@ const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
 
         case "ArrowDown":
           setView((prev) => {
-            const newView = prev + gridSide <= gridSide*gridSide ? prev + gridSide : prev;
+            const newView =
+              prev + gridSide <= gridSide * gridSide ? prev + gridSide : prev;
             setTimeout(updateView, 0);
             return newView;
           });
@@ -84,7 +89,7 @@ const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
   // ex: https://cdn.jsdelivr.net/gh/norawennerstrom/lf-Bikes/Clean/view_85.webp
   const lightFieldPath =
     "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
-    selectedImage +
+    selectedLightField +
     "/" +
     selectedDenoiser +
     "/view_" +

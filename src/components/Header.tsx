@@ -1,20 +1,25 @@
 import ImageMenu from "./ImageMenu";
-import ViewButtons from "./ViewButtons";
+import ViewButton from "./ViewButton";
 
 interface HeaderProps {
   lightFields: string[];
-  setSelectedImage: (image: string) => void;
+  setSelectedLightField: (image: string) => void;
   setIsDualView: React.Dispatch<React.SetStateAction<boolean>>;
   isDualView: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ lightFields, setSelectedImage, setIsDualView, isDualView }) => {
+const Header: React.FC<HeaderProps> = ({
+  lightFields,
+  setSelectedLightField,
+  setIsDualView,
+  isDualView,
+}) => {
   return (
     <div className="header">
       <div className="header-side-div">
         <ImageMenu
           lightFields={lightFields}
-          setSelectedImage={setSelectedImage}
+          setSelectedLightField={setSelectedLightField}
         />
       </div>
 
@@ -27,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ lightFields, setSelectedImage, setIsDua
         </p>
       </div>
       <div className="header-side-div">
-        <ViewButtons setIsDualView={setIsDualView} isDualView={isDualView} />
+        <ViewButton setIsDualView={setIsDualView} isDualView={isDualView} />
       </div>
     </div>
   );

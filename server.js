@@ -1,4 +1,4 @@
-// ChatGPT
+// titta igenom!!
 
 const fs = require("fs");
 const path = require("path");
@@ -26,7 +26,7 @@ app.get("/api/lightFields", (req, res) => {
 
     try {
       const parsed = JSON.parse(data);
-      const lightFields = parsed.base_sets || [];
+      const lightFields = parsed.lightFields || [];
       res.json(lightFields);
     } catch (parseErr) {
       console.error("Error parsing lf.json: ", parseErr);
@@ -56,11 +56,11 @@ app.get("/api/denoisers", (req, res) => {
   });
 });
 
-app.post("/api/log-performance", (req, res) => {
+app.post("/api/logPerformance", (req, res) => {
   const logDir = path.join(__dirname, "logs");
-  const logFile = path.join(logDir, "performance_log.csv");
+  const logFile = path.join(logDir, "perf_log.csv");
 
-  if(!fs.existsSync(logDir)) {
+  if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir);
   }
 
@@ -82,7 +82,6 @@ app.post("/api/log-performance", (req, res) => {
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

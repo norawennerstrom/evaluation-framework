@@ -1,7 +1,7 @@
 import LightFieldViewer from "./LightFieldViewer";
 
 interface BodyProps {
-  selectedImage: string;
+  selectedLightField: string;
   selectedDenoiser: string;
   secondSelectedDenoiser: string;
   setSecondSelectedDenoiser: (denoiser: string) => void;
@@ -11,28 +11,28 @@ interface BodyProps {
 }
 
 const Body: React.FC<BodyProps> = ({
-  selectedImage,
+  selectedLightField,
   selectedDenoiser,
   secondSelectedDenoiser,
   denoisers,
   setSelectedDenoiser,
   setSecondSelectedDenoiser,
-  isDualView
+  isDualView,
 }) => {
   return (
     <div className="body">
       <LightFieldViewer
-        selectedImage={selectedImage}
+        selectedLightField={selectedLightField}
         selectedDenoiser={selectedDenoiser}
         denoisers={denoisers}
         setSelectedDenoiser={setSelectedDenoiser}
       />
       {isDualView && (
         <LightFieldViewer
-        selectedImage={selectedImage}
-        selectedDenoiser={secondSelectedDenoiser}
-        denoisers={denoisers}
-        setSelectedDenoiser={setSecondSelectedDenoiser}
+          selectedLightField={selectedLightField}
+          selectedDenoiser={secondSelectedDenoiser}
+          denoisers={denoisers}
+          setSelectedDenoiser={setSecondSelectedDenoiser}
         />
       )}
     </div>

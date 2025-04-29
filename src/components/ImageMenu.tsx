@@ -1,16 +1,16 @@
 interface ImageMenuProps {
   lightFields: string[];
-  setSelectedImage: (image: string) => void;
+  setSelectedLightField: (image: string) => void;
 }
 
 const ImageMenu: React.FC<ImageMenuProps> = ({
   lightFields,
-  setSelectedImage,
+  setSelectedLightField,
 }) => {
   return (
     <select
       className="image-menu"
-      onChange={(e) => setSelectedImage(e.target.value)}
+      onChange={(e) => setSelectedLightField(e.target.value)}
     >
       <option value="" selected disabled hidden>
         Bikes
