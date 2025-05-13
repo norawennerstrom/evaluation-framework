@@ -1,6 +1,6 @@
 import DenoiserMenu from "./DenoiserMenu";
-import { forwardRef } from "react"; // forwardref deprecated??
-//import preloadViews from "./preloadViews";
+import { useEffect, forwardRef } from "react"; // forwardref deprecated??
+import preloadViews from "./preloadViews";
 
 type LightFieldViewerProps = {
   selectedLightField: string;
@@ -23,9 +23,9 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
       currentView +
       ".webp";
 
-    // useEffect(() => {
-    //   preloadViews(selectedLightField, selectedDenoiser);
-    // }, [selectedDenoiser, selectedLightField]);
+    useEffect(() => {
+      preloadViews(selectedLightField, selectedDenoiser);
+    }, [selectedDenoiser, selectedLightField]);
 
     return (
       <div className="light-field-viewer">
