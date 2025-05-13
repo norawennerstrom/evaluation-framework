@@ -47,7 +47,7 @@ app.get("/api/denoisers", (req, res) => {
 
     try {
       const parsed = JSON.parse(data);
-      const denoisers = parsed.denoisers || [];
+      const denoisers = parsed.denoisers.map((d) => d.name) || [];
       res.json(denoisers);
     } catch (parseErr) {
       console.error("Error parsing lf.json: ", parseErr);

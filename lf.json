@@ -6,11 +6,11 @@
         "Stone_Pillars_Outside"
     ],
     "denoisers": [
-        "BSRGAN",
-        "Clean",
-        "Noisy",
-        "Restormer",
-        "SwinIR",
-        "SwinIR_large"
+        { "name": "BSRGAN" }, 
+        { "name": "Clean" },
+        { "name": "Noisy" },
+        { "name": "Restormer" },
+        { "name": "SwinIR" },
+        { "name": "SwinIR_large" }
     ]
 }
