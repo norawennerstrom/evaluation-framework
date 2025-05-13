@@ -1,4 +1,4 @@
-function logPerformance(type: string, denoiser: string, duration: number) {
+function logPerformance(type: string, denoiser: string, duration: string) {
   const baseURL =
     window.location.hostname === "localhost"
       ? "http://localhost:5000"

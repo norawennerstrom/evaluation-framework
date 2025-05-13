@@ -66,7 +66,7 @@ app.post("/api/logPerformance", (req, res) => {
 
   const { type, denoiser, duration, timestamp } = req.body;
 
-  const line = `${timestamp},${type},${denoiser},${duration.toFixed(2)}\n`;
+  const line = `${timestamp},${type},${denoiser},${duration}\n`;
 
   fs.appendFile(logFile, line, (err) => {
     if (err) {

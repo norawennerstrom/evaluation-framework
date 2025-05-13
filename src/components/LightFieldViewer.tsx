@@ -1,110 +1,65 @@
 import DenoiserMenu from "./DenoiserMenu";
-import logPerformance from "./logPerformance";
-import { useState, useEffect } from "react";
+import { useEffect, useRef, forwardRef } from "react"; // forwardref deprecated??
+import preloadViews from "./preloadViews";
 
-interface LightFieldViewerProps {
+type LightFieldViewerProps = {
   selectedLightField: string;
   selectedDenoiser: string;
-  denoisers: string[];
+  currentView: number;
   setSelectedDenoiser: (denoiser: string) => void;
-}
-
-const gridSide = 13;
-
-const LightFieldViewer: React.FC<LightFieldViewerProps> = ({
-  selectedLightField,
-  selectedDenoiser,
-  denoisers,
-  setSelectedDenoiser,
-}) => {
-  const [view, setView] = useState(85);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const start = performance.now(); // measure response time
-      const updateView = () => {
-        const img = document.querySelector(
-          "img.light-field"
-        ) as HTMLImageElement;
-        if (img?.complete) {
-          const duration = performance.now() - start;
-          logPerformance("nav", selectedDenoiser, duration);
-        } else {
-          img?.addEventListener(
-            "load",
-            () => {
-              const duration = performance.now() - start;
-              logPerformance("nav", selectedDenoiser, duration);
-            },
-            { once: true }
-          );
-        }
-      };
-
-      switch (event.key) {
-        case "ArrowLeft":
-          setView((prev) => {
-            const newView = prev % gridSide !== 0 ? prev + 1 : prev;
-            setTimeout(updateView, 0);
-            return newView;
-          });
-          break;
-
-        case "ArrowRight":
-          setView((prev) => {
-            const newView = prev % gridSide !== 1 ? prev - 1 : prev;
-            setTimeout(updateView, 0);
-            return newView;
-          });
-          break;
-
-        case "ArrowUp":
-          setView((prev) => {
-            const newView = prev - gridSide > 0 ? prev - gridSide : prev;
-            setTimeout(updateView, 0);
-            return newView;
-          });
-          break;
-
-        case "ArrowDown":
-          setView((prev) => {
-            const newView =
-              prev + gridSide <= gridSide * gridSide ? prev + gridSide : prev;
-            setTimeout(updateView, 0);
-            return newView;
-          });
-          break;
-
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedDenoiser]);
-
-  // ex: https://cdn.jsdelivr.net/gh/norawennerstrom/lf-Bikes/Clean/view_85.webp
-  const lightFieldPath =
-    "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
-    selectedLightField +
-    "/" +
-    selectedDenoiser +
-    "/view_" +
-    view +
-    ".webp";
-
-  return (
-    <div className="light-field-viewer">
-      <img className="light-field" height={434} src={lightFieldPath} />
-      <DenoiserMenu
-        denoisers={denoisers}
-        setSelectedDenoiser={setSelectedDenoiser}
-      />
-    </div>
-  );
 };
+
+const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
+  (
+    { selectedLightField, selectedDenoiser, currentView, setSelectedDenoiser },
+    imgRef
+  ) => {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+    useEffect(() => {
+      preloadViews(selectedLightField, selectedDenoiser);
+    }, [selectedDenoiser, selectedLightField]);
+
+    useEffect(() => {
+      const lightFieldPath =
+        "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
+        selectedLightField +
+        "/" +
+        selectedDenoiser +
+        "/view_" +
+        currentView +
+        ".webp";
+
+      const canvas = canvasRef.current;
+      if (canvas && imgRef && typeof imgRef !== "function") {
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        imgRef.current = img;
+
+        img.addEventListener("load", () => {
+          ctx?.clearRect(0, 0, canvas.width, canvas.height);
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        });
+
+        img.src = lightFieldPath;
+      }
+    }, [currentView, selectedDenoiser, selectedLightField]);
+
+    return (
+      <div className="light-field-viewer">
+        <canvas
+          className="light-field"
+          ref={canvasRef}
+          height="434"
+          width="625"
+        ></canvas>
+        <DenoiserMenu
+          setSelectedDenoiser={setSelectedDenoiser}
+          selectedDenoiser={selectedDenoiser}
+        />
+      </div>
+    );
+  }
+);
 
 export default LightFieldViewer;

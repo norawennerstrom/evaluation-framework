@@ -1,10 +1,10 @@
 import logPerformance from "./logPerformance";
+import { GRID_SIDE } from "../constants";
 
 function preloadViews(
   image: string,
   denoiser: string,
-  viewCache: Map<String, HTMLElement>,
-  onComplete?: (duration: number) => void
+  onComplete?: (duration: string) => void
 ) {
   const start = performance.now();
   const src =
@@ -14,17 +14,17 @@ function preloadViews(
     denoiser +
     "/view_";
 
-  let totalToLoad = 13 * 13; // lägg in sidlängden som en environment-variabel?
+  let totalToLoad = GRID_SIDE * GRID_SIDE;
   let loadCount = 0;
 
-  for (let view = 1; view <= 13 * 13; view++) {
+  for (let view = 1; view <= totalToLoad; view++) {
     const imgSrc = src + view + ".webp";
     const img = new Image();
 
     img.onload = () => {
       loadCount++;
       if (loadCount === totalToLoad) {
-        const duration = performance.now() - start;
+        const duration = (performance.now() - start).toFixed(6);
         logPerformance("init", denoiser, duration);
 
         if (onComplete) {
@@ -33,7 +33,6 @@ function preloadViews(
       }
     };
     img.src = imgSrc;
-    viewCache.set(imgSrc, img);
   }
 }
 export default preloadViews;
