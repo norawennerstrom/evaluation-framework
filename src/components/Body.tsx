@@ -88,13 +88,13 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
       const updateView = () => {
         const img = imgRef.current;
         if (img?.complete) {
-          const duration = performance.now() - start;
+          const duration = (performance.now() - start).toFixed(6);
           logPerformance("nav", selectedDenoiser, duration);
         } else {
           img?.addEventListener(
             "load",
             () => {
-              const duration = performance.now() - start;
+              const duration = (performance.now() - start).toFixed(6);
               logPerformance("nav", selectedDenoiser, duration);
             },
             { once: true }
@@ -103,13 +103,13 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
 
         const secondImg = secondImgRef.current;
         if (secondImg?.complete) {
-          const duration = performance.now() - start;
+          const duration = (performance.now() - start).toFixed(6);
           logPerformance("nav", secondSelectedDenoiser, duration);
         } else {
           secondImg?.addEventListener(
             "load",
             () => {
-              const duration = performance.now() - start;
+              const duration = (performance.now() - start).toFixed(6);
               logPerformance("nav", secondSelectedDenoiser, duration);
             },
             { once: true }
@@ -163,8 +163,7 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
           break;
 
         default:
-          const neighbors = getRowAndColumn(currentView);
-          addViewRequest(currentView, neighbors);
+          break;
       }
     };
 
