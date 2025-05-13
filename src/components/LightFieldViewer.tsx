@@ -1,6 +1,6 @@
 import DenoiserMenu from "./DenoiserMenu";
-import { useEffect, useRef, forwardRef } from "react"; // forwardref deprecated??
-import preloadViews from "./preloadViews";
+import { forwardRef } from "react"; // forwardref deprecated??
+//import preloadViews from "./preloadViews";
 
 type LightFieldViewerProps = {
   selectedLightField: string;
@@ -14,45 +14,27 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
     { selectedLightField, selectedDenoiser, currentView, setSelectedDenoiser },
     imgRef
   ) => {
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const lightFieldPath =
+      "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
+      selectedLightField +
+      "/" +
+      selectedDenoiser +
+      "/view_" +
+      currentView +
+      ".webp";
 
-    useEffect(() => {
-      preloadViews(selectedLightField, selectedDenoiser);
-    }, [selectedDenoiser, selectedLightField]);
-
-    useEffect(() => {
-      const lightFieldPath =
-        "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
-        selectedLightField +
-        "/" +
-        selectedDenoiser +
-        "/view_" +
-        currentView +
-        ".webp";
-
-      const canvas = canvasRef.current;
-      if (canvas && imgRef && typeof imgRef !== "function") {
-        const ctx = canvas.getContext("2d");
-        const img = new Image();
-        imgRef.current = img;
-
-        img.addEventListener("load", () => {
-          ctx?.clearRect(0, 0, canvas.width, canvas.height);
-          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        });
-
-        img.src = lightFieldPath;
-      }
-    }, [currentView, selectedDenoiser, selectedLightField]);
+    // useEffect(() => {
+    //   preloadViews(selectedLightField, selectedDenoiser);
+    // }, [selectedDenoiser, selectedLightField]);
 
     return (
       <div className="light-field-viewer">
-        <canvas
+        <img
           className="light-field"
-          ref={canvasRef}
-          height="434"
-          width="625"
-        ></canvas>
+          height={434}
+          ref={imgRef}
+          src={lightFieldPath}
+        />
         <DenoiserMenu
           setSelectedDenoiser={setSelectedDenoiser}
           selectedDenoiser={selectedDenoiser}
