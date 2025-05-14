@@ -9,6 +9,7 @@ const DenoiserMenu: React.FC<DenoiserMenuProps> = ({
   setSelectedDenoiser,
   selectedDenoiser,
 }) => {
+  // component containing the denoiser menu
   const select = useRef<HTMLSelectElement | null>(null);
   select.current?.addEventListener("keydown", function (event) {
     if (

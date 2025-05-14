@@ -5,6 +5,9 @@ interface ImageMenuProps {
 }
 
 const ImageMenu: React.FC<ImageMenuProps> = ({ setSelectedLightField }) => {
+  // component containing a menu for selecting the displayed light field
+
+  // ref to the HTML select element (for adding event listener)
   const select = useRef<HTMLSelectElement | null>(null);
   select.current?.addEventListener("keydown", function (event) {
     if (
@@ -14,10 +17,13 @@ const ImageMenu: React.FC<ImageMenuProps> = ({ setSelectedLightField }) => {
       event.key === "ArrowRight"
     ) {
       // prevent the arrow keys from being used to change the selected option
+      // (will otherwise interfere with navigation in light field)
       event.preventDefault();
     }
   });
   return (
+    // use the setter for state variable selectedLightField on change
+    // options taken from LIGHT_FIELDS array in constants.ts
     <select
       className="image-menu"
       ref={select}
