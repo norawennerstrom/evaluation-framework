@@ -9,17 +9,24 @@ interface BodyProps {
 }
 
 const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
+  // component containing the body of the app
+
+  // ref for the displayed image(s)
   const imgRef = useRef<HTMLImageElement | null>(null);
   const secondImgRef = useRef<HTMLImageElement | null>(null);
+  // state variables for displayed denoiser(s) and view (default: Clean and SwinIR, view 85 (center))
   const [selectedDenoiser, setSelectedDenoiser] = useState("Clean");
   const [currentView, setCurrentView] = useState<number>(85);
   const [secondSelectedDenoiser, setSecondSelectedDenoiser] =
     useState("SwinIR");
 
+  // effect hook for adding event listener for keyboard events
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const start = performance.now(); // start timer
-      const updateView = () => {
+      const start = performance.now(); // start timer at button click
+
+      const measureLoadTime = () => {
+        // function for detecting when the displayed images are loaded and logging the time
         const img = imgRef.current;
         if (img?.complete) {
           const duration = (performance.now() - start).toFixed(6);
@@ -54,8 +61,10 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
       switch (event.key) {
         case "ArrowLeft":
           setCurrentView((prev) => {
+            // switch view one step to the left unless the end of the field is already reached
             const newView = prev % GRID_SIDE !== 0 ? prev + 1 : prev;
-            setTimeout(updateView, 0);
+            // call measureLoadTime after currentView is updated
+            setTimeout(measureLoadTime, 0);
             return newView;
           });
           break;
@@ -63,7 +72,7 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
         case "ArrowRight":
           setCurrentView((prev) => {
             const newView = prev % GRID_SIDE !== 1 ? prev - 1 : prev;
-            setTimeout(updateView, 0);
+            setTimeout(measureLoadTime, 0);
             return newView;
           });
           break;
@@ -71,7 +80,7 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
         case "ArrowUp":
           setCurrentView((prev) => {
             const newView = prev - GRID_SIDE > 0 ? prev - GRID_SIDE : prev;
-            setTimeout(updateView, 0);
+            setTimeout(measureLoadTime, 0);
             return newView;
           });
           break;
@@ -82,7 +91,7 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
               prev + GRID_SIDE <= GRID_SIDE * GRID_SIDE
                 ? prev + GRID_SIDE
                 : prev;
-            setTimeout(updateView, 0);
+            setTimeout(measureLoadTime, 0);
             return newView;
           });
           break;

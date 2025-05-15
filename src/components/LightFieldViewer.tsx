@@ -1,5 +1,5 @@
 import DenoiserMenu from "./DenoiserMenu";
-import { useEffect, forwardRef } from "react"; // forwardref deprecated??
+import { useEffect, forwardRef } from "react";
 import preloadViews from "./preloadViews";
 
 type LightFieldViewerProps = {
@@ -14,6 +14,9 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
     { selectedLightField, selectedDenoiser, currentView, setSelectedDenoiser },
     imgRef
   ) => {
+    // component containing the light field viewer
+
+    // path to the currently requested image
     const lightFieldPath =
       "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
       selectedLightField +
@@ -23,6 +26,7 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
       currentView +
       ".webp";
 
+    // effect hook for preloading the full field when the options in the selects change
     useEffect(() => {
       preloadViews(selectedLightField, selectedDenoiser);
     }, [selectedDenoiser, selectedLightField]);
