@@ -1,5 +1,3 @@
-// titta igenom!!
-
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
@@ -11,10 +9,10 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Serve the built frontend
+// serve the built frontend
 app.use(express.static(path.resolve(__dirname, "dist")));
 
-// API: list available light fields
+// get the light fields from lf.json (restore!)
 app.get("/api/lightFields", (req, res) => {
   const jsonPath = path.join(__dirname, "lf.json");
 
@@ -35,7 +33,7 @@ app.get("/api/lightFields", (req, res) => {
   });
 });
 
-// get the denoisers from lf.json
+// get the denoisers from lf.json (restore!)
 app.get("/api/denoisers", (req, res) => {
   const jsonPath = path.join(__dirname, "lf.json");
 
@@ -56,6 +54,7 @@ app.get("/api/denoisers", (req, res) => {
   });
 });
 
+// post the logs to perf_log.csv
 app.post("/api/logPerformance", (req, res) => {
   const logDir = path.join(__dirname, "logs");
   const logFile = path.join(logDir, "perf_log.csv");
@@ -66,7 +65,7 @@ app.post("/api/logPerformance", (req, res) => {
 
   const { type, denoiser, duration, timestamp } = req.body;
 
-  const line = `${timestamp},${type},${denoiser},${duration.toFixed(2)}\n`;
+  const line = `${timestamp},${type},${denoiser},${duration}\n`;
 
   fs.appendFile(logFile, line, (err) => {
     if (err) {
@@ -77,8 +76,8 @@ app.post("/api/logPerformance", (req, res) => {
   });
 });
 
-// Fallback route for SPA (must come last)
-// Only serve index.html for paths that don't start with /api
+// fallback route for SPA (explain!)
+// only serve index.html for paths that don't start with /api
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });

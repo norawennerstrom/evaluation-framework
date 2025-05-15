@@ -12,6 +12,7 @@ const Header: React.FC<HeaderProps> = ({
   setIsDualView,
   isDualView,
 }) => {
+  // component containing the header portion of the app
   return (
     <div className="header">
       <div className="header-side-div">

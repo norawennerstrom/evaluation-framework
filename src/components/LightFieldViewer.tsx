@@ -13,8 +13,12 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
     { selectedLightField, selectedDenoiser, currentView, setSelectedDenoiser },
     imgRef
   ) => {
+    // component containing the light field viewer
+
+    // ref to the canvas element (used for updating displayed image)
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+    // effect hook for updating the canvas when a new image is requested
     useEffect(() => {
       const lightFieldPath =
         "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
@@ -31,11 +35,12 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
         const img = new Image();
         imgRef.current = img;
 
+        // once the new image is loaded, draw it!
         img.addEventListener("load", () => {
           ctx?.clearRect(0, 0, canvas.width, canvas.height);
           ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
         });
-
+        // update path to the image
         img.src = lightFieldPath;
       }
     }, [currentView, selectedDenoiser, selectedLightField]);

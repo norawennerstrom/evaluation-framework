@@ -10,6 +10,8 @@ interface BodyProps {
 }
 
 function getUpper(view: number): [number, boolean] {
+  // returns the calculated number for the upper neighbor of view
+  // isValid is true if the calculated neighbor exists
   const upperNeighbor = view - GRID_SIDE;
   const isValid = upperNeighbor > 0;
   return [upperNeighbor, isValid];
@@ -34,12 +36,18 @@ function getLeft(view: number): [number, boolean] {
 }
 
 function getRowAndColumn(view: number) {
+  // returns the numbers for all of the views in the same column and row as view
+  // ordered by distance from view, where the farthest views come first
+
   let rowAndColumn = [];
+  // variables for determining when the edges of the grid are reached
   let remainingUpper, remainingLower, remainingRight, remainingLeft;
   remainingUpper = remainingLower = remainingRight = remainingLeft = true;
+  // variables for keeping track of the latest added view in each direction
   let upper, lower, right, left;
   upper = lower = right = left = view;
 
+  // add views in each direction until the edges of the grid have been reached
   while (remainingUpper || remainingLower || remainingRight || remainingLeft) {
     if (remainingUpper) {
       [upper, remainingUpper] = getUpper(upper);
@@ -67,25 +75,35 @@ function getRowAndColumn(view: number) {
     }
   }
 
+  // reverse the array to put the closest views last
   return rowAndColumn.reverse();
 }
 
 const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
+  // component containing the body of the app
+
+  // ref for the displayed image(s)
   const imgRef = useRef<HTMLImageElement | null>(null);
   const secondImgRef = useRef<HTMLImageElement | null>(null);
+  // state variables for displayed denoiser(s) and view (default: Clean and SwinIR, view 85 (center))
   const [selectedDenoiser, setSelectedDenoiser] = useState("Clean");
   const [secondSelectedDenoiser, setSecondSelectedDenoiser] =
     useState("SwinIR");
+
+  // call prioritizedPreload to initialize and access state variable currentView and function addViewRequest
   const { currentView, addViewRequest } = prioritizedPreload(
     selectedLightField,
     selectedDenoiser,
     secondSelectedDenoiser
   );
 
+  // effect hook for adding event listener for keyboard events
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const start = performance.now(); // start timer
-      const updateView = () => {
+      const start = performance.now(); // start timer at button click
+
+      const measureLoadTime = () => {
+        // function for detecting when the displayed images are loaded and logging the time
         const img = imgRef.current;
         if (img?.complete) {
           const duration = (performance.now() - start).toFixed(6);
@@ -120,11 +138,15 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
       switch (event.key) {
         case "ArrowLeft":
           if (currentView) {
+            // switch view one step to the left unless the end of the field is already reached
             const newView =
               currentView % GRID_SIDE !== 0 ? currentView + 1 : currentView;
-            setTimeout(updateView, 0);
-            const neighbors = getRowAndColumn(newView);
-            addViewRequest(newView, neighbors);
+            // call measureLoadTime after currentView is updated
+            setTimeout(measureLoadTime, 0);
+
+            // add requests for the new view and the rest of the views in the same row and column
+            const rowAndColumn = getRowAndColumn(newView);
+            addViewRequest(newView, rowAndColumn);
           }
           break;
 
@@ -132,9 +154,9 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
           if (currentView) {
             const newView =
               currentView % GRID_SIDE !== 1 ? currentView - 1 : currentView;
-            setTimeout(updateView, 0);
-            const neighbors = getRowAndColumn(newView);
-            addViewRequest(newView, neighbors);
+            setTimeout(measureLoadTime, 0);
+            const rowAndColumn = getRowAndColumn(newView);
+            addViewRequest(newView, rowAndColumn);
           }
           break;
 
@@ -144,9 +166,9 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
               currentView - GRID_SIDE > 0
                 ? currentView - GRID_SIDE
                 : currentView;
-            setTimeout(updateView, 0);
-            const neighbors = getRowAndColumn(newView);
-            addViewRequest(newView, neighbors);
+            setTimeout(measureLoadTime, 0);
+            const rowAndColumn = getRowAndColumn(newView);
+            addViewRequest(newView, rowAndColumn);
           }
           break;
 
@@ -156,9 +178,9 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
               currentView + GRID_SIDE <= GRID_SIDE * GRID_SIDE
                 ? currentView + GRID_SIDE
                 : currentView;
-            setTimeout(updateView, 0);
-            const neighbors = getRowAndColumn(newView);
-            addViewRequest(newView, neighbors);
+            setTimeout(measureLoadTime, 0);
+            const rowAndColumn = getRowAndColumn(newView);
+            addViewRequest(newView, rowAndColumn);
           }
           break;
 
