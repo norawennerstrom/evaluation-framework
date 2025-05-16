@@ -26,8 +26,18 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
 
     // effect hook for updating the canvas when a new image is requested
     useEffect(() => {
+      // path to the currently requested image (CDN)
+      // const lightFieldPath =
+      //   "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
+      //   selectedLightField +
+      //   "/" +
+      //   selectedDenoiser +
+      //   "/view_" +
+      //   currentView +
+      //   ".webp";
+      // path to the currently requested image (local)
       const lightFieldPath =
-        "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
+        "/~nowe2200/kandidatarbete/dist/" +
         selectedLightField +
         "/" +
         selectedDenoiser +
