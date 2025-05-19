@@ -1,6 +1,6 @@
 import DenoiserMenu from "./DenoiserMenu";
 import { useEffect, useRef, forwardRef } from "react";
-//import preloadViews from "./preloadViews";
+import preloadViews from "./preloadViews";
 
 type LightFieldViewerProps = {
   selectedLightField: string;
@@ -20,30 +20,30 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     // effect hook for preloading the full field when the options in the selects change
-    // useEffect(() => {
-    //   preloadViews(selectedLightField, selectedDenoiser);
-    // }, [selectedDenoiser, selectedLightField]);
+    useEffect(() => {
+      preloadViews(selectedLightField, selectedDenoiser);
+    }, [selectedDenoiser, selectedLightField]);
 
     // effect hook for updating the canvas when a new image is requested
     useEffect(() => {
       // path to the currently requested image (CDN)
-      // const lightFieldPath =
-      //   "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
-      //   selectedLightField +
-      //   "/" +
-      //   selectedDenoiser +
-      //   "/view_" +
-      //   currentView +
-      //   ".webp";
-      // path to the currently requested image (local)
       const lightFieldPath =
-        "/~nowe2200/kandidatarbete/dist/" +
+        "https://cdn.jsdelivr.net/gh/norawennerstrom/lf-" +
         selectedLightField +
         "/" +
         selectedDenoiser +
         "/view_" +
         currentView +
         ".webp";
+      // path to the currently requested image (local)
+      // const lightFieldPath =
+      //   "/~nowe2200/kandidatarbete/dist/" +
+      //   selectedLightField +
+      //   "/" +
+      //   selectedDenoiser +
+      //   "/view_" +
+      //   currentView +
+      //   ".webp";
 
       const canvas = canvasRef.current;
       if (canvas && imgRef && typeof imgRef !== "function") {
