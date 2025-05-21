@@ -16,12 +16,15 @@ const ViewButton: React.FC<ViewButtonProps> = ({
   }
   return (
     // button inverting the value of isDualView when clicked
-    <div
-      className="view-buttons"
-      onClick={() => setIsDualView((prev: boolean) => !prev)}
-    >
-      <button>{buttonText}</button>
-    </div>
+    <>
+      <p>Toggle view layout:</p>
+      <div
+        className="view-buttons"
+        onClick={() => setIsDualView((prev: boolean) => !prev)}
+      >
+        <button>{buttonText}</button>
+      </div>
+    </>
   );
 };
 export default ViewButton;
