@@ -23,20 +23,23 @@ const DenoiserMenu: React.FC<DenoiserMenuProps> = ({
     }
   });
   return (
-    <select
-      className="denoiser-menu"
-      ref={select}
-      onChange={(e) => setSelectedDenoiser(e.target.value)}
-    >
-      <option value="" selected disabled hidden>
-        {selectedDenoiser}
-      </option>
-      {DENOISERS.map((denoiser) => (
-        <option key={denoiser} value={denoiser}>
-          {denoiser}
+    <>
+      <p>Select applied denoiser:</p>
+      <select
+        className="denoiser-menu"
+        ref={select}
+        onChange={(e) => setSelectedDenoiser(e.target.value)}
+      >
+        <option value="" selected disabled hidden>
+          {selectedDenoiser}
         </option>
-      ))}
-    </select>
+        {DENOISERS.map((denoiser) => (
+          <option key={denoiser} value={denoiser}>
+            {denoiser}
+          </option>
+        ))}
+      </select>
+    </>
   );
 };
 export default DenoiserMenu;

@@ -3,10 +3,8 @@
   text-align: center;
 }
 
-.body {
-  text-align: center;
-  display: flex;
-  justify-content: center;
+.arrows {
+  margin: 0 .5rem 0 .5rem;
 }
 
 .denoiser-menu {
@@ -23,6 +21,20 @@
 .header-side-div {
   flex: 1;
   margin-top: 5rem;
+}
+
+.instructions {
+  font-size: larger;
+}
+
+.lf-index {
+  margin: 0;
+}
+
+.lf-viewers {
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 .light-field {
@@ -42,3 +54,11 @@
   height: fit-content;
   width: fit-content;
 }
+
+.view-nr {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: x-large;
+  margin: 0;
+  padding: 0;
+}
+

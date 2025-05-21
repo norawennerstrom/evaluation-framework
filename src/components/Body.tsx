@@ -201,22 +201,28 @@ const Body: React.FC<BodyProps> = ({ selectedLightField, isDualView }) => {
   ]);
   return (
     <div className="body">
-      <LightFieldViewer
-        selectedLightField={selectedLightField}
-        selectedDenoiser={selectedDenoiser}
-        currentView={currentView}
-        setSelectedDenoiser={setSelectedDenoiser}
-        ref={imgRef}
-      />
-      {isDualView && (
+      <div className="view-index">
+        <p>Current view:</p>
+        <p className="view-nr">{currentView}</p>
+      </div>
+      <div className="lf-viewers">
         <LightFieldViewer
           selectedLightField={selectedLightField}
-          selectedDenoiser={secondSelectedDenoiser}
+          selectedDenoiser={selectedDenoiser}
           currentView={currentView}
-          setSelectedDenoiser={setSecondSelectedDenoiser}
-          ref={secondImgRef}
+          setSelectedDenoiser={setSelectedDenoiser}
+          ref={imgRef}
         />
-      )}
+        {isDualView && (
+          <LightFieldViewer
+            selectedLightField={selectedLightField}
+            selectedDenoiser={secondSelectedDenoiser}
+            currentView={currentView}
+            setSelectedDenoiser={setSecondSelectedDenoiser}
+            ref={secondImgRef}
+          />
+        )}
+      </div>
     </div>
   );
 };
