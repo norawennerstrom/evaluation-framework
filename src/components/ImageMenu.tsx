@@ -24,20 +24,23 @@ const ImageMenu: React.FC<ImageMenuProps> = ({ setSelectedLightField }) => {
   return (
     // use the setter for state variable selectedLightField on change
     // options taken from LIGHT_FIELDS array in constants.ts
-    <select
-      className="image-menu"
-      ref={select}
-      onChange={(e) => setSelectedLightField(e.target.value)}
-    >
-      <option value="" selected disabled hidden>
-        Bikes
-      </option>
-      {LIGHT_FIELDS.map((lightField) => (
-        <option key={lightField} value={lightField}>
-          {lightField}
+    <>
+      <p>Select the scene:</p>
+      <select
+        className="image-menu"
+        ref={select}
+        onChange={(e) => setSelectedLightField(e.target.value)}
+      >
+        <option value="" selected disabled hidden>
+          Bikes
         </option>
-      ))}
-    </select>
+        {LIGHT_FIELDS.map((lightField) => (
+          <option key={lightField} value={lightField}>
+            {lightField}
+          </option>
+        ))}
+      </select>
+    </>
   );
 };
 export default ImageMenu;

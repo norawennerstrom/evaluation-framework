@@ -21,11 +21,15 @@ const Header: React.FC<HeaderProps> = ({
 
       <div className="title">
         <h1>Light Field Denoising Comparison Tool</h1>
-        <p>
-          Change the base light field in the menu to the left, and the applied
-          denoiser in the menu below the image.
+        <p className="instructions">
+          Shift the perspective of a displayed image using the arrow keys
+          <img
+            src="/~nowe2200/kandidatarbete/on_demand/dist/arrow_keys.png"
+            width="35"
+            className="arrows"
+          ></img>
+          .
         </p>
-        <p>Shift the perspecitve of a displayed image using the arrow keys.</p>
       </div>
       <div className="header-side-div">
         <ViewButton setIsDualView={setIsDualView} isDualView={isDualView} />
