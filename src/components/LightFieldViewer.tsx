@@ -1,6 +1,6 @@
 import DenoiserMenu from "./DenoiserMenu";
 import { useEffect, useRef, forwardRef } from "react";
-//import preloadViews from "./preloadViews";
+import preloadViews from "./preloadViews";
 
 type LightFieldViewerProps = {
   selectedLightField: string;
@@ -20,9 +20,9 @@ const LightFieldViewer = forwardRef<HTMLImageElement, LightFieldViewerProps>(
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     // effect hook for preloading the full field when the options in the selects change
-    // useEffect(() => {
-    //   preloadViews(selectedLightField, selectedDenoiser);
-    // }, [selectedDenoiser, selectedLightField]);
+    useEffect(() => {
+      preloadViews(selectedLightField, selectedDenoiser);
+    }, [selectedDenoiser, selectedLightField]);
 
     // effect hook for updating the canvas when a new image is requested
     useEffect(() => {
